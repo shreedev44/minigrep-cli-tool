@@ -1,8 +1,72 @@
+//! # minigrep_cli_tool
+//!
+//! A lightweight library module that powers the MiniGrep CLI tool.
+//!
+//! It provides two main functions for searching within text:
+//! - `search` (case-sensitive)
+//! - `search_case_insensitive` (case-insensitive)
+//!
+//! # Examples
+//! ```
+//! use minigrep_cli_tool::{search, search_case_insensitive};
+//!
+//! let query = "rust";
+//! let contents = "Rust is fast.\nTrust in Rust.";
+//!
+//! // Case-sensitive
+//! let matches: Vec<&str> = search(query, contents).collect();
+//!
+//! // Case-insensitive
+//! let matches_insensitive: Vec<&str> = search_case_insensitive(query, contents).collect();
+//! ```
+
+/// Searches for lines containing the query string in the provided text.
+///
+/// This function performs a **case-sensitive** search.
+///
+/// # Arguments
+/// - `query`: The substring to look for.
+/// - `contents`: The text to search within.
+///
+/// # Returns
+/// An iterator over lines that contain the query.
+///
+/// # Examples
+/// ```
+/// use minigrep_cli_tool::search;
+///
+/// let query = "safe";
+/// let contents = "Rust is safe.\nFast.\nProductive.";
+///
+/// let results: Vec<&str> = search(query, contents).collect();
+/// assert_eq!(results, vec!["Rust is safe."]);
+/// ```
+
 pub fn search<'a>(query: &str, contents: &'a str) -> impl Iterator<Item = &'a str> {
     contents
         .lines()
         .filter(move |line| line.contains(query))
 }
+
+/// Searches for lines containing the query string, ignoring case.
+///
+/// # Arguments
+/// - `query`: The substring to look for.
+/// - `contents`: The text to search within.
+///
+/// # Returns
+/// An iterator over lines that contain the query, ignoring case.
+///
+/// # Examples
+/// ```
+/// use minigrep_cli_tool::search_case_insensitive;
+///
+/// let query = "RuSt";
+/// let contents = "Rust:\nReally productive.\nTrust in rust.";
+///
+/// let results: Vec<&str> = search_case_insensitive(query, contents).collect();
+/// assert_eq!(results, vec!["Rust:", "Trust in rust."]);
+/// ```
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> impl Iterator<Item = &'a str> {
     contents
